@@ -67,7 +67,7 @@ html, body {
 body {
     background: rgb(42,52,65);
     color: #ffffff;
-    font-family: "Roboto", Helvetica, sans-serif;
+    font-family: "Ubuntu", "Roboto", Helvetica, sans-serif;
     font-weight: 300;
     overflow: auto;
     overflow: overlay;
@@ -170,4 +170,243 @@ a:active {
     margin: 0 auto;
     margin-top: 16px;
     
+}
+
+.treeViewWrapper{
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+.treeView,
+.treeItemContent,
+.changesToApply{
+    width: 45%;
+    margin-bottom: 16px;
+    min-width: 256px;
+    border: 1px dashed #ffffff16;
+    border-radius: 8px;
+    padding: 12px;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.changesToApply{
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 32px;
+}
+
+.treeItemContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.treeItemContent>.title{
+    font-weight: 400;
+    margin-bottom: 4px;
+}
+
+ul.maketree, ul.maketree ul, ul.maketree li {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  list-style: none;
+  margin-top: 6px;
+}
+ul.maketree ul { padding-left: 0.3em; }
+ul.maketree li {
+  padding-left: 13px;
+}
+ul.maketree:not(.show){
+    display: none;
+}
+
+ul.maketree li>span {
+    cursor: pointer;
+}
+
+ul.maketree li>span:hover {
+    text-decoration: underline #ffffff64;
+    
+}
+
+ul.maketree li>span:active {
+    text-decoration: underline #ffffff;
+}
+
+.expandBtn,
+.editBtn,
+.applyBtn{
+    display: inline-block;
+    width: 22px;
+    height: 20px;
+    text-align: center;
+    margin-left: 6px;
+    border: 1px dashed #ffffff32;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.editBtn,
+.applyBtn{
+    display: inline-block;
+    width: initial;
+    height: initial;
+    padding: 4px;
+}
+.applyBtn{
+    padding: 4px 12px;
+    font-size: 20px;
+}
+
+.expandBtn:hover,
+.editBtn:hover,
+.applyBtn:hover {
+    border-color: #ffffff64;
+    border-width: 1px;
+    border-style: dashed;
+    background: #ffffff08;
+}
+
+.expandBtn:active,
+.editBtn:active,
+.applyBtn:active {
+    border-color: #ffffff64;
+    border-width: 1px;
+    border-style: solid;
+    background: #ffffff16;
+}
+
+.controlsGroup {
+    display: flex;
+    margin-top: 8px;
+    justify-content: center;
+    display: none;
+    margin-top: auto;
+}
+
+@media (max-width: 900px) {
+
+    .controlsGroup {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    .controlsGroup>.editBtn {
+        margin-bottom: 6px;
+    }
+
+}
+
+@media (min-width: 950px) and (orientation:landscape) {
+
+    .controlsGroup>.editBtn {
+        border-left-color: transparent;
+        border-right-color: transparent;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+        padding-left: 6px;
+        padding-right: 6px;
+        border-right-width: 1px;
+    }
+
+    .controlsGroup>.editBtn:hover {
+        border-style: dashed;
+        background: #ffffff08;
+    border-color: #ffffff64;
+    }
+
+    .controlsGroup>.editBtn:active {
+        border-style: solid;
+        border-color: #ffffff64;
+        background: #ffffff16;
+    }
+    
+    .controlsGroup>.editBtn:first-child {
+        margin-left: 6px;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+        border-left-color: #ffffff42;
+    }
+    
+    .controlsGroup>.editBtn:last-child {
+        margin-right: 6px;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        border-right-color: #ffffff42;
+    }
+
+}
+
+.applyTop,
+.applyBottom {
+    display: flex;
+    justify-content: center;
+}
+
+.applyTop {
+    font-weight: 400;
+    margin-bottom: 12px;
+    font-size: 18px;
+    
+}
+.applyBottom {
+    margin-top: 12px;
+    
+}
+.applyBody {
+    
+    
+}
+
+.modalWindow {
+  position: fixed;
+  font-family: "Motiva Sans", Sans-serif;
+  background: rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.modalWindow>.modalHeader {
+  background: blue;
+  padding: 15px;
+  color: #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.modalWindow>.modalBody {
+  margin: 10% auto;
+  width: 60%;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+  animation-name: modalopen;
+  animation-duration: var(--modal-duration);
+}
+
+.modalWindow>.modalFooter {
+  background: blue;
+  padding: 10px;
+  color: #fff;
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+@keyframes modalopen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
