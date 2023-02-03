@@ -1,5 +1,5 @@
 <?php
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+//mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 //session_set_cookie_params(1200,"/");
 session_start(); //Запускаем сессии
  

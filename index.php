@@ -1,13 +1,13 @@
 <?
-$login = false;
-$role = "guest";
+  $login = false;
+  $role = "guest";
 
-require_once('auth.class.php');
+  require_once('auth.class.php');
 
-if ($auth->isAuth()) {
-  $login = $auth->getLogin();
-  $role = $auth->getRole();
-}
+  if ($auth->isAuth()) {
+    $login = $auth->getLogin();
+    $role = $auth->getRole();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,32 +71,14 @@ if ($auth->isAuth()) {
     		</div>
           </div>
 
-<?
-if(($role=="admin" || $role=="moderator") && $login != false){
-?>
-<div class="changesToApply">
-    <div class="applyTop">
-        Unsaved changes:
-    </div>
-    <div class="applyBody">
-        
-    </div>
-    <div class="applyBottom">
-        <div class='applyBtn'>Apply changes</div>
-    </div>
-</div>
-<?
-}
-?>
-
       </div>
 
       <footer>
-      	Made by <a href="//fhnb.ru/">fhnb16</a> in 2023 ?>
+      	Made by <a href="//fhnb.ru/">fhnb16</a> in 2023
       </footer>
 
 <?
-if($login == false){
+  if($login == false){
 ?>
       <div class="modalWindow" id="authModal">
       	<form class="modalWrapper" id="authForm" method="POST" action="auth.php" >
@@ -113,7 +95,7 @@ if($login == false){
       	</form>
       </div>
 <?
-}
+  }
 ?>
 
       <div class="modalWindow" id="editModal">
@@ -126,7 +108,7 @@ if($login == false){
               <input type="text" name="editableItem" class="editText" placeholder="" />
               <span class="editStatus"></span>
           </div>
-          <div class="modalFooter"><button type="submit" class="updateBtn">OK</button><div class="cancelBtn" onclick="closeModal()">Cancel</div></div>
+          <div class="modalFooter"><button type="submit" class="updateBtn">Submit</button><div class="cancelBtn" onclick="closeModal()">Cancel</div></div>
       	</form>
       </div>
 
@@ -135,15 +117,13 @@ if($login == false){
 var role = "guest";
 
 if(document.querySelector('meta[name="trees-task"]') !== null){
-	var role = document.querySelector('meta[name="trees-task"]').getAttribute('data-role')
+	var role = document.querySelector('meta[name="trees-task"]').getAttribute('data-role');
 }
       
 
 var treeParent = document.querySelector(".treeView")
 var treeContent = document.querySelector('.treeItemContent');
 var treeJson = [];
-var tempTree = [];
-var changesJson = [];
 
 var authWindow = document.querySelector('#authModal');
 var editWindow = document.querySelector('#editModal');
@@ -178,22 +158,23 @@ function openEditModal(e) {
   editWindow.querySelector('.editText').style.display = "block";
   editWindow.querySelector('.editText').type = "text";
   document.getElementById('editForm').setAttribute("data-id", e.parentElement.getAttribute("data-id"));
+  document.querySelector(".editStatus").innerText = "";
 
   switch(e.textContent || e.innerText){
   	case "Edit Title":
   	  editWindow.querySelector('.editText').name = "title";
-  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).title;
+  	  editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).title;
   	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "title");
   	break;
   	case "Edit Description":
   	  editWindow.querySelector('.editText').name = "description";
-  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).description;
+  	  editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).description;
   	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "description");
   	break;
   	case "Set Parent":
   	  editWindow.querySelector('.editText').name = "parent";
   	  editWindow.querySelector('.editText').type = "number";
-  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).parent;
+  	  editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).parent;
   	  editWindow.querySelector('.editText').min = 0;
   	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "parent");
   	break;
@@ -201,9 +182,11 @@ function openEditModal(e) {
   	  editWindow.querySelector('.editText').style.display = "none";
   	  var span = document.createElement("span");
   	  span.setAttribute("class", "infoMsg");
-  	  span.textContent = "Are you sure want to delete item `" + getValue(tempTree, e.parentElement.getAttribute("data-id")).title + "` with id " + e.parentElement.getAttribute("data-id") + "?";
+  	  span.textContent = "Are you sure want to delete item `" + getValue(treeJson, e.parentElement.getAttribute("data-id")).title + "` with id " + e.parentElement.getAttribute("data-id") + "?";
   	  editWindow.querySelector('.modalBody').prepend(span);
   	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "remove");
+  	break;
+  	case "Add":
   	break;
   }
 
@@ -246,31 +229,92 @@ async function authRequestFunc(event){
 	            })
 }
 
-function findNested (arr, id) {
-  for (let item of arr) {
-    if (item.id === id) return item // item found, return the current obj
-    if (item.children instanceof Array) {
-      // magic happens here
-      return findNested(item.children, id)
-    }
-  }
-  return null // nothing found
-}
-
-function editRequestFunc(event){
+async function editRequestFunc(event){
     event.preventDefault();
 
-	var obj = findNested(tempTree, event.target.getAttribute("data-id"));
+    var result = null;
 
-	console.log(JSON.stringify(obj));
+    switch(event.target.querySelector('.updateBtn').getAttribute("data-prop")){
+    	case "title": result = await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]'));
+    	break;
+    	case "description": result = await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]'));
+    	break;
+    	case "parent": result = await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]'));
+    	break;
+    	case "remove": result = await UpdateRequest(event.target.getAttribute("data-id"), "remove", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]'));
+    	break;
+    }
 
-	if(event.target.querySelector('.updateBtn').getAttribute("data-prop") == "remove"){
+	//var obj = findNested(treeJson, event.target.getAttribute("data-id"));
+
+	//console.log(JSON.stringify(obj));
+
+	/*if(event.target.querySelector('.updateBtn').getAttribute("data-prop") == "remove"){
       obj = [];
 	}else{
       obj[event.target.querySelector('.updateBtn').getAttribute("data-prop")] = editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]');
-	}
+	}*/
+    /*switch(task){
+    	case "update": 
+    	break;
+    	case "remove": 
+    	break;
+    	case "add": 
+    	break;
+    }*/
 
-	treeParent.innerHTML = printTree(tempTree, 3)
+}
+
+function UpdateRequest(id, task, property, val){
+  // console.log("Item ID: "+id, "Task to do: "+task, "Property to change: "+property, "New Value: "+val);
+  // return ("Item ID: "+id+", Task to do: "+task+", Property to change: "+property+", New Value: "+val);
+
+	var params = {};
+
+	switch(task){
+    	case "update": 
+			params = {
+			    id: id,
+			    task: task,
+			    property: property,
+			    value: val.value
+			};
+    	break;
+    	case "remove": 
+			params = {
+			    id: id,
+			    task: task
+			};
+    	break;
+    	case "add": 
+			params = {
+			    id: id,
+			    task: task,
+			    property: property,
+			    value: val
+			};
+    	break;
+    }
+
+	var options = {
+	    method: 'POST',
+	    body: JSON.stringify( params )  
+	};
+
+	fetch( 'updateTree.php', options )
+	    .then( response => response.json() )
+	    .then( response => {
+	    	document.querySelector(".editStatus").innerText = response.status
+	    	if(response.status == "success"){
+	    		fetchData();
+	    		closeModal();
+	    	}
+	    } );
+
+
+
+
+
 
 }
 
@@ -286,9 +330,8 @@ document.onkeydown = function(evt) {
             .then((res) => res.json())
             .then((data) => {
                 treeJson = data
-                tempTree = data
                 if(role == "admin" || role == "moderator"){
-                  treeParent.innerHTML = printTree(tempTree, 3)
+                  treeParent.innerHTML = printTree(data, 3)
                 }else{
                   treeParent.innerHTML = printTree(data)
                 }
