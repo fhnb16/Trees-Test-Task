@@ -238,6 +238,7 @@ ul.maketree li>span:active {
 .editBtn,
 .applyBtn,
 .cancelBtn,
+.addBtn,
 button{
     display: inline-block;
     width: 22px;
@@ -263,11 +264,15 @@ button{
     padding: 4px 12px;
     font-size: 20px;
 }
+.addBtn{
+    width: 42px;
+}
 
 .expandBtn:hover,
 .editBtn:hover,
 .applyBtn:hover,
 .cancelBtn:hover,
+.addBtn:hover,
 button:hover {
     border-color: #ffffff64;
     border-width: 1px;
@@ -279,6 +284,7 @@ button:hover {
 .editBtn:active,
 .applyBtn:active,
 .cancelBtn:active,
+.addBtn:active,
 button:active {
     border-color: #ffffff64;
     border-width: 1px;
@@ -496,7 +502,8 @@ input[type="number"]:focus  {
 }
 
 .authError,
-.editStatus{
+.editStatus,
+.addStatus{
   color: red;
   font-weight: 500;
   text-align: center;

@@ -1,6 +1,5 @@
 <?
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 header('Content-Type: application/json');
 
@@ -21,7 +20,7 @@ if(!$auth->isAuth()){
 $query = "";
 
 switch($data['task']){
-	case "add": 
+	case "add": $query .= "INSERT INTO  `internet-clients_datatrees` (`title`, `description`, `parent`) VALUES ('".$dblink->real_escape_string(htmlspecialchars($data["value"]["title"]))."', '".$dblink->real_escape_string(htmlspecialchars($data["value"]["description"]))."', '".$dblink->real_escape_string(htmlspecialchars($data["value"]["parent"]))."');";
 	break;
 	case "remove": $query .= "DELETE FROM `internet-clients_datatrees` WHERE `id`='".$dblink->real_escape_string(htmlspecialchars($data["id"]))."';";
 	break;
