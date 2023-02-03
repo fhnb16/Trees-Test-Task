@@ -19,7 +19,7 @@ if ($auth->isAuth()) {
 
       <title>Tree View</title>
 
-      <link rel='stylesheet' type='text/css' href='https://test.fhnb.ru/Trees/assets/style/index.css?5'>
+      <link rel='stylesheet' type='text/css' href='https://test.fhnb.ru/Trees/assets/style/index.css?6'>
       <script type='text/javascript' src=''></script>
 
       <style type='text/css'>
@@ -62,8 +62,8 @@ if ($auth->isAuth()) {
         		<div class="controlsGroup">
         		    <div class='editBtn' onclick="openEditModal(this)">Edit Title</div>
         		    <div class='editBtn' onclick="openEditModal(this)">Edit Description</div>
+        		    <div class='editBtn' onclick="openEditModal(this)">Set Parent</div>
         		    <div class='editBtn' onclick="openEditModal(this)">Remove</div>
-        		    <div class='editBtn' onclick="openEditModal(this)">Set parent</div>
         		</div>
 <?
   }
@@ -123,11 +123,10 @@ if($login == false){
             <span class="close">&times;</span>
           </div>
           <div class="modalBody">
-              <input type="text" name="login" placeholder="Login" />
-              <input type="password" name="pass" placeholder="Password" />
-              <span class="authError"></span>
+              <input type="text" name="editableItem" class="editText" placeholder="" />
+              <span class="editStatus"></span>
           </div>
-          <div class="modalFooter"><button type="submit">OK</button><div class="cancelBtn" onclick="closeModal()">Cancel</div></div>
+          <div class="modalFooter"><button type="submit" class="updateBtn">OK</button><div class="cancelBtn" onclick="closeModal()">Cancel</div></div>
       	</form>
       </div>
 
@@ -139,6 +138,13 @@ if(document.querySelector('meta[name="trees-task"]') !== null){
 	var role = document.querySelector('meta[name="trees-task"]').getAttribute('data-role')
 }
       
+
+var treeParent = document.querySelector(".treeView")
+var treeContent = document.querySelector('.treeItemContent');
+var treeJson = [];
+var tempTree = [];
+var changesJson = [];
+
 var authWindow = document.querySelector('#authModal');
 var editWindow = document.querySelector('#editModal');
 var authBtn = document.querySelector('#authBtn');
@@ -164,8 +170,43 @@ function openAuthModal() {
 }
 
 function openEditModal(e) {
-  editWindow.querySelector('.elementName').innerText = e.textContent || e.innerText;
   editWindow.classList.add("active");
+
+  var msg = editWindow.querySelector('.modalBody .infoMsg');
+  if(msg !== null) { msg.remove(); }
+  editWindow.querySelector('.elementName').innerHTML = (e.textContent || e.innerText) + " <small>id "+e.parentElement.getAttribute("data-id")+"</small>"
+  editWindow.querySelector('.editText').style.display = "block";
+  editWindow.querySelector('.editText').type = "text";
+  document.getElementById('editForm').setAttribute("data-id", e.parentElement.getAttribute("data-id"));
+
+  switch(e.textContent || e.innerText){
+  	case "Edit Title":
+  	  editWindow.querySelector('.editText').name = "title";
+  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).title;
+  	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "title");
+  	break;
+  	case "Edit Description":
+  	  editWindow.querySelector('.editText').name = "description";
+  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).description;
+  	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "description");
+  	break;
+  	case "Set Parent":
+  	  editWindow.querySelector('.editText').name = "parent";
+  	  editWindow.querySelector('.editText').type = "number";
+  	  editWindow.querySelector('.editText').value = getValue(tempTree, e.parentElement.getAttribute("data-id")).parent;
+  	  editWindow.querySelector('.editText').min = 0;
+  	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "parent");
+  	break;
+  	case "Remove":
+  	  editWindow.querySelector('.editText').style.display = "none";
+  	  var span = document.createElement("span");
+  	  span.setAttribute("class", "infoMsg");
+  	  span.textContent = "Are you sure want to delete item `" + getValue(tempTree, e.parentElement.getAttribute("data-id")).title + "` with id " + e.parentElement.getAttribute("data-id") + "?";
+  	  editWindow.querySelector('.modalBody').prepend(span);
+  	  editWindow.querySelector('.updateBtn').setAttribute("data-prop", "remove");
+  	break;
+  }
+
 }
 
 function closeModal() {
@@ -205,15 +246,40 @@ async function authRequestFunc(event){
 	            })
 }
 
+function findNested (arr, id) {
+  for (let item of arr) {
+    if (item.id === id) return item // item found, return the current obj
+    if (item.children instanceof Array) {
+      // magic happens here
+      return findNested(item.children, id)
+    }
+  }
+  return null // nothing found
+}
+
 function editRequestFunc(event){
     event.preventDefault();
 
+	var obj = findNested(tempTree, event.target.getAttribute("data-id"));
+
+	console.log(JSON.stringify(obj));
+
+	if(event.target.querySelector('.updateBtn').getAttribute("data-prop") == "remove"){
+      obj = [];
+	}else{
+      obj[event.target.querySelector('.updateBtn').getAttribute("data-prop")] = editWindow.querySelector('.modalBody input[name="'+event.target.querySelector('.updateBtn').getAttribute("data-prop")+'"]');
+	}
+
+	treeParent.innerHTML = printTree(tempTree, 3)
+
 }
-      
-      var treeContent = document.querySelector('.treeItemContent');
-      var treeJson = [];
-      var tempTree = [];
-      var changesJson = [];
+
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+    	closeModal();
+    }
+};
       
         async function fetchData() {
             await fetch('getTree.php?fetch=all&nested=true')
@@ -221,7 +287,6 @@ function editRequestFunc(event){
             .then((data) => {
                 treeJson = data
                 tempTree = data
-                var treeParent = document.querySelector(".treeView")
                 if(role == "admin" || role == "moderator"){
                   treeParent.innerHTML = printTree(tempTree, 3)
                 }else{
@@ -246,8 +311,12 @@ function editRequestFunc(event){
         }
         
         function getTextFunction(event){
-            treeContent.querySelector(".title").innerText = getValue(treeJson, event.target.parentElement.getAttribute('data-id')).title;
-            treeContent.querySelector(".descr").innerText = getValue(treeJson, event.target.parentElement.getAttribute('data-id')).description;
+            var idStr = "";
+	        if(role == "admin" || role == "moderator"){
+	          idStr = " <small>id "+event.target.parentElement.getAttribute('data-id')+"</small>";
+	        }
+            treeContent.querySelector(".title").innerHTML = (getValue(treeJson, event.target.parentElement.getAttribute('data-id')).title) + idStr;
+            treeContent.querySelector(".descr").innerHTML = getValue(treeJson, event.target.parentElement.getAttribute('data-id')).description;
             document.querySelector('.controlsGroup').setAttribute("style", "display: flex");
             document.querySelector('.controlsGroup').setAttribute("data-id", event.target.parentElement.getAttribute('data-id'));
         }
@@ -277,13 +346,20 @@ function editRequestFunc(event){
                 if(state==0){
                 	state=1;
                 }
+                var idStr = "";
+
                 for (prop in Json) {
                     var value = Json[prop];
+
+	                if(role == "admin" || role == "moderator"){
+	                	idStr = " <small>id "+value.id+"</small>";
+	                }
+
                     if(typeof(value.children) == "object"){
-                        json += "<li data-id='"+value.id+"'><span>" + value.title + "</span>" + expandBtn + printTree(value.children, state) + "</li>";
+                        json += "<li data-id='"+value.id+"'><span>" + value.title + idStr + "</span>" + expandBtn + printTree(value.children, state) + "</li>";
                         
                     }else{
-                        json += "<li data-id='"+value.id+"'><span>" + value.title + "</span></li>";
+                        json += "<li data-id='"+value.id+"'><span>" + value.title + idStr + "</span></li>";
                         
                     }
                 }
