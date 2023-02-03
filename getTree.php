@@ -23,6 +23,8 @@ header('Content-Type: application/json');
 
 $output = $result->fetch_all(MYSQLI_ASSOC);
 
+$dblink->close();
+
 function buildTree(array $array): ?array {
 
 	$keyed = array();

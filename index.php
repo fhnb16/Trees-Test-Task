@@ -19,7 +19,7 @@
 
       <title>Tree View</title>
 
-      <link rel='stylesheet' type='text/css' href='https://test.fhnb.ru/Trees/assets/style/index.css?6'>
+      <link rel='stylesheet' type='text/css' href='https://test.fhnb.ru/Trees/assets/style/index.css?7'>
       <script type='text/javascript' src=''></script>
 
       <style type='text/css'>
@@ -304,10 +304,13 @@ function UpdateRequest(id, task, property, val){
 	fetch( 'updateTree.php', options )
 	    .then( response => response.json() )
 	    .then( response => {
-	    	document.querySelector(".editStatus").innerText = response.status
 	    	if(response.status == "success"){
-	    		fetchData();
-	    		closeModal();
+	    		fetchData()
+	    		closeModal()
+	    		treeContent.querySelector(".title").innerHTML = "";
+            	treeContent.querySelector(".descr").innerHTML = "";
+	    	}else{
+	    	    document.querySelector(".editStatus").innerText = response.message
 	    	}
 	    } );
 
@@ -393,6 +396,9 @@ document.onkeydown = function(evt) {
 
                 for (prop in Json) {
                     var value = Json[prop];
+	        		if(value.title == undefined){
+	        			continue;
+	        		}
 
 	                if(role == "admin" || role == "moderator"){
 	                	idStr = " <small>id "+value.id+"</small>";

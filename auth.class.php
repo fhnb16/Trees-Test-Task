@@ -32,6 +32,8 @@ class AuthClass {
 
         $result = $dblink->query($query);
 
+        $dblink->close();
+
         $assoc = $result->fetch_assoc();
 
         if($result->num_rows > 0){
