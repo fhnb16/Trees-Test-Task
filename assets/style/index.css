@@ -508,6 +508,9 @@ input[type="number"] {
     border: 1px solid white;
     border: 1px dashed #ffffff32;
     background-color: #ffffff16;
+    pointer-events: auto;
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 input[type="text"]:hover,
