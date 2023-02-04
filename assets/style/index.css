@@ -1,27 +1,30 @@
 * {
-  box-sizing: border-box;
-  color: inherit;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  cursor: default;
-  outline: inherit;
-  text-decoration: none;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
+    box-sizing: border-box;
+    color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: default;
+    outline: inherit;
+    text-decoration: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
-*, ::after, ::before {
-  box-sizing: border-box;
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
 }
 
 ::-webkit-scrollbar {
@@ -31,18 +34,22 @@
     background: transparent;
     overflow: visible;
 }
-::-webkit-scrollbar-track, ::-webkit-scrollbar-button {
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-button {
     display: none;
 }
+
 ::-webkit-scrollbar-corner {
     background: rgb(67, 73, 83);
 }
+
 ::-webkit-scrollbar-thumb {
     width: 4px;
     min-height: 32px;
     z-index: 12;
     background-image: none;
-    background-color: rgba(67, 73, 83,.6);
+    background-color: rgba(67, 73, 83, .6);
     background-clip: padding-box;
     border-width: 3px;
     border-style: solid;
@@ -51,21 +58,23 @@
     border-radius: 10px;
     transition: background-color 0.32s ease-in-out 0s;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(67, 73, 83,.9);
+    background-color: rgba(67, 73, 83, .9);
 }
-::-webkit-scrollbar-track, ::-webkit-scrollbar-button {
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-button {
     display: none;
 }
 
-html {
-}
+html {}
 
-html, body {
-}
+html,
+body {}
 
 body {
-    background: rgb(42,52,65);
+    background: rgb(42, 52, 65);
     color: #ffffff;
     font-family: "Ubuntu", "Roboto", Helvetica, sans-serif;
     font-weight: 300;
@@ -75,12 +84,13 @@ body {
 
 nav {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    background: rgb(68,84,105);
-    border-bottom: 1px solid rgb(54,67,84);
+    background: rgb(68, 84, 105);
+    border-bottom: 1px solid rgb(54, 67, 84);
     color: #ffffff;
     font-weight: 400;
-    text-transform:uppercase;
+    text-transform: uppercase;
     position: sticky;
     top: 0;
     left: 0;
@@ -91,7 +101,7 @@ nav {
 nav>* {
     margin-left: 12px;
     margin-right: 12px;
-    
+
 }
 
 nav>.logo,
@@ -104,7 +114,7 @@ nav>.user {
     text-transform: initial;
     margin-left: auto;
     font-weight: 200;
-    padding-right:0;
+    padding-right: 0;
 }
 
 nav>ul {
@@ -116,11 +126,11 @@ nav>ul>li {
     padding: 6px;
     cursor: pointer;
     position: relative;
-    transition:all .2s ease;
+    transition: all .2s ease;
 }
 
 nav>ul>li:before {
-    transition:all .4s ease;
+    transition: all .4s ease;
     content: '';
     height: 2px;
     bottom: 6px;
@@ -148,38 +158,39 @@ nav>ul>li:active:before {
 }
 
 footer {
-	text-align: center;
+    text-align: center;
 }
 
 a {
-	text-decoration: underline;
-    transition:all .2s ease;
+    text-decoration: underline;
+    transition: all .2s ease;
     cursor: pointer;
 }
 
 a:hover {
-	color: #00adff;
+    color: #00adff;
 }
 
 a:active {
-	color: #0072ff;
+    color: #0072ff;
 }
 
 .content {
     width: 95vw;
     margin: 0 auto;
     margin-top: 16px;
-    
+
 }
 
-.treeViewWrapper{
+.treeViewWrapper {
     justify-content: center;
     display: flex;
     flex-wrap: wrap;
 }
+
 .treeView,
 .treeItemContent,
-.changesToApply{
+.changesToApply {
     width: 45%;
     margin-bottom: 16px;
     min-width: 256px;
@@ -190,7 +201,7 @@ a:active {
     margin-right: 6px;
 }
 
-.changesToApply{
+.changesToApply {
     width: 90%;
     margin: 0 auto;
     margin-bottom: 32px;
@@ -201,23 +212,30 @@ a:active {
     flex-direction: column;
 }
 
-.treeItemContent>.title{
+.treeItemContent>.title {
     font-weight: 400;
     margin-bottom: 4px;
 }
 
-ul.maketree, ul.maketree ul, ul.maketree li {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  list-style: none;
-  margin-top: 6px;
-}
-ul.maketree ul { padding-left: 0.3em; }
+ul.maketree,
+ul.maketree ul,
 ul.maketree li {
-  padding-left: 13px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    list-style: none;
+    margin-top: 6px;
 }
-ul.maketree:not(.show){
+
+ul.maketree ul {
+    padding-left: 0.3em;
+}
+
+ul.maketree li {
+    padding-left: 13px;
+}
+
+ul.maketree:not(.show) {
     display: none;
 }
 
@@ -227,7 +245,7 @@ ul.maketree li>span {
 
 ul.maketree li>span:hover {
     text-decoration: underline #ffffff64;
-    
+
 }
 
 ul.maketree li>span:active {
@@ -239,7 +257,7 @@ ul.maketree li>span:active {
 .applyBtn,
 .cancelBtn,
 .addBtn,
-button{
+button {
     display: inline-block;
     width: 22px;
     height: 20px;
@@ -254,17 +272,19 @@ button{
 .editBtn,
 .applyBtn,
 .cancelBtn,
-button{
+button {
     display: inline-block;
     width: initial;
     height: initial;
     padding: 4px;
 }
-.applyBtn{
+
+.applyBtn {
     padding: 4px 12px;
     font-size: 20px;
 }
-.addBtn{
+
+.addBtn {
     width: 42px;
 }
 
@@ -306,6 +326,7 @@ button:active {
         flex-wrap: wrap;
         flex-direction: column;
     }
+
     .controlsGroup>.editBtn {
         margin-bottom: 6px;
     }
@@ -328,7 +349,7 @@ button:active {
     .controlsGroup>.editBtn:hover {
         border-style: dashed;
         background: #ffffff08;
-    border-color: #ffffff64;
+        border-color: #ffffff64;
     }
 
     .controlsGroup>.editBtn:active {
@@ -336,14 +357,14 @@ button:active {
         border-color: #ffffff64;
         background: #ffffff16;
     }
-    
+
     .controlsGroup>.editBtn:first-child {
         margin-left: 6px;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
         border-left-color: #ffffff42;
     }
-    
+
     .controlsGroup>.editBtn:last-child {
         margin-right: 6px;
         border-top-right-radius: 6px;
@@ -363,42 +384,42 @@ button:active {
     font-weight: 400;
     margin-bottom: 12px;
     font-size: 18px;
-    
-}
-.applyBottom {
-    margin-top: 12px;
-    
-}
-.applyBody {
-    
-    
+
 }
 
+.applyBottom {
+    margin-top: 12px;
+
+}
+
+.applyBody {}
+
 .modalWindow {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.16);
-  -webkit-backdrop-filter: blur(1px);
-  backdrop-filter: blur(1px);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -999;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.16);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -999;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    display: flex;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
 }
 
 .modalWindow.active {
-  pointer-events: unset;
-  z-index: 999;
-  visibility: visible;
-  opacity: 1;
+    pointer-events: unset;
+    z-index: 999;
+    visibility: visible;
+    opacity: 1;    display: flex;
 }
 
 .modalWindow .modalWrapper {
@@ -413,66 +434,73 @@ button:active {
 }
 
 .modalWindow .modalHeader {
-  display: inline-flex;
-  justify-content: space-between;
-  background: rgb(68,84,105);
-  padding: 15px;
-  color: #fff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+    display: inline-flex;
+    justify-content: space-between;
+    background: rgb(68, 84, 105);
+    padding: 15px;
+    color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .modalWindow .modalBody {
-  display: flex;
-  flex-direction: column;
-  /* margin: 10% auto; */
-  height: 100%;
-  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
-  animation-name: modalopen;
-  animation-duration: .3s;
-  overflow: auto;
-  overflow: overlay;
-  background-color: rgb(42,52,65);
+    display: flex;
+    flex-direction: column;
+    /* margin: 10% auto; */
+    height: 100%;
+    animation-name: modalopen;
+    animation-duration: .3s;
+    overflow: auto;
+    overflow: overlay;
+    background-color: rgb(42, 52, 65);
 }
 
+.modalWindow .modalBody>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin-left: 12px;
+}
 .modalWindow .modalBody span {
-  padding: 12px;
+    padding: 12px;
 }
 
 .modalWindow .modalFooter {
-  background: rgb(68,84,105);
-  padding: 10px;
-  color: #fff;
-  text-align: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+    background: rgb(68, 84, 105);
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
-.close{
-  cursor: pointer;
-  transition: all 0.3s;
+.close {
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
-.close:hover{
-  transform: scale(1.3);
+.close:hover {
+    transform: scale(1.3);
 }
 
-.close:active{
-  transform: scale(0.8);
+.close:active {
+    transform: scale(0.8);
 }
 
 @keyframes modalopen {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 input[type="text"],
 input[type="password"],
-input[type="number"]  {
+input[type="number"] {
     padding: 4px;
     margin: 6px;
     outline: none;
@@ -484,40 +512,40 @@ input[type="number"]  {
 
 input[type="text"]:hover,
 input[type="password"]:hover,
-input[type="number"]:hover  {
+input[type="number"]:hover {
     border: 1px solid #ffffff42;
 }
 
 input[type="text"]:active,
 input[type="password"]:active,
-input[type="number"]:active  {
+input[type="number"]:active {
     border: 1px solid #ffffff42;
     background-color: #ffffff32;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
-input[type="number"]:focus  {
+input[type="number"]:focus {
     border: 1px solid #ffffff64;
 }
 
 .authError,
 .editStatus,
-.addStatus{
-  color: red;
-  font-weight: 500;
-  text-align: center;
-  text-transform: uppercase;
-  margin: 4px;
-  padding: 2px;
+.addStatus {
+    color: red;
+    font-weight: 500;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 4px;
+    padding: 2px;
 }
 
 .editText {
-  display: none;
+    display: none;
 }
 
-small{
-  color: gray;
-  font-weight: 200;
-  font-size: 10px;
+small {
+    color: gray;
+    font-weight: 200;
+    font-size: 10px;
 }
