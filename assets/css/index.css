@@ -127,6 +127,8 @@ nav>ul>li {
     cursor: pointer;
     position: relative;
     transition: all .2s ease;
+    display: flex;
+    align-items: center;
 }
 
 nav>ul>li:before {
@@ -397,8 +399,8 @@ button:active {
 .modalWindow {
     position: fixed;
     background: rgba(0, 0, 0, 0.16);
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     top: 0;
     right: 0;
     bottom: 0;
@@ -455,7 +457,7 @@ button:active {
     background-color: rgb(42, 52, 65);
 }
 
-.modalWindow .modalBody>div {
+.modalWindow .modalBody>.editableItems>div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -500,7 +502,8 @@ button:active {
 
 input[type="text"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+select {
     padding: 4px;
     margin: 6px;
     outline: none;
@@ -511,24 +514,39 @@ input[type="number"] {
     pointer-events: auto;
     user-select: text;
     -webkit-user-select: text;
+    width: 70%;
+}
+
+#authForm input[type="text"],
+#authForm input[type="password"] {
+    width: 95%;
+    align-self: center;
+
+}
+
+select{
+    background-color: #3c4651;
 }
 
 input[type="text"]:hover,
 input[type="password"]:hover,
-input[type="number"]:hover {
+input[type="number"]:hover,
+select:hover {
     border: 1px solid #ffffff42;
 }
 
 input[type="text"]:active,
 input[type="password"]:active,
-input[type="number"]:active {
+input[type="number"]:active,
+select:active {
     border: 1px solid #ffffff42;
     background-color: #ffffff32;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
-input[type="number"]:focus {
+input[type="number"]:focus,
+select:focus {
     border: 1px solid #ffffff64;
 }
 
@@ -551,4 +569,10 @@ small {
     color: gray;
     font-weight: 200;
     font-size: 10px;
+}
+
+nav svg {
+  height: 14px;
+  fill: #fff;
+  padding-right: 4px;
 }

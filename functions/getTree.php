@@ -1,6 +1,8 @@
 <?
 //mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-require ('config/connect.php');
+require ('../config/connect.php');
+
+require_once('./functions.php');
 
 if (isset($_GET['parent']) && !empty($_GET['parent']) && filter_var($_GET['parent'], FILTER_VALIDATE_INT))
 {
@@ -27,33 +29,9 @@ header('Content-Type: application/json');
 
 $output = $result->fetch_all(MYSQLI_ASSOC);
 
+$err = $dblink->error;
+
 $dblink->close();
-
-function buildTree(array $array): ? array
-    {
-
-        $keyed = array();
-        foreach ($array as & $value)
-        {
-            $keyed[$value['id']] = & $value;
-        }
-        unset($value);
-        $array = $keyed;
-        unset($keyed);
-
-        // tree it
-        $tree = array();
-        foreach ($array as & $value)
-        {
-            if ($parent = $value['parent']) $array[$parent]['children'][] = & $value;
-            else $tree[] = & $value;
-        }
-        unset($value);
-        $array = $tree;
-        unset($tree);
-
-        return $array;
-    }
 
     if ($_GET['nested'] == "true")
     {

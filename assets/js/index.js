@@ -8,6 +8,7 @@ if (document.querySelector('meta[name="trees-task"]') !== null) {
 var treeParent = document.querySelector(".treeView")
 var treeContent = document.querySelector('.treeItemContent');
 var treeJson = [];
+var ids = [];
 
 var authWindow = document.querySelector('#authModal');
 var editWindow = document.querySelector('#editModal');
@@ -48,6 +49,22 @@ function openAuthModal() {
 
 function openAddModal() {
     addWindow.classList.add("active");
+    for (var i = 0; i < ids.length; i++) {
+        var option = document.createElement("option");
+        option.value = ids[i].id;
+                var indent = "";
+                if(ids[i].id<100){
+                    indent = "    ";
+                }
+                if(ids[i].id<10){
+                    indent = "      ";
+                }
+        option.text = "(id " + ids[i].id + ") " + indent + ids[i].name;
+        addWindow.querySelector('.addParent').appendChild(option);
+    }
+    addWindow.querySelector('.addTitle').value = "";
+    addWindow.querySelector('.addDescription').value = "";
+    addWindow.querySelector('.addParent').value = 0;
 }
 
 function openEditModal(e) {
@@ -57,41 +74,56 @@ function openEditModal(e) {
     if (msg !== null) {
         msg.remove();
     }
-    editWindow.querySelector('.elementName').innerHTML = (e.textContent || e.innerText) + " <small>id " + e.parentElement.getAttribute("data-id") + "</small>"
-    editWindow.querySelector('.editText').style.display = "block";
-    editWindow.querySelector('.editText').type = "text";
+    //editWindow.querySelector('.elementName').innerHTML = (e.textContent || e.innerText) + " <small>id " + e.parentElement.getAttribute("data-id") + "</small>"
     document.getElementById('editForm').setAttribute("data-id", e.parentElement.getAttribute("data-id"));
     document.querySelector(".editStatus").innerText = "";
 
     switch (e.textContent || e.innerText) {
-        case "Edit Title":
-            editWindow.querySelector('.editText').name = "title";
-            editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).title;
-            editWindow.querySelector('.updateBtn').setAttribute("data-prop", "title");
-            break;
-        case "Edit Description":
-            editWindow.querySelector('.editText').name = "description";
-            editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).description;
-            editWindow.querySelector('.updateBtn').setAttribute("data-prop", "description");
-            break;
-        case "Set Parent":
-            editWindow.querySelector('.editText').name = "parent";
-            editWindow.querySelector('.editText').type = "number";
-            editWindow.querySelector('.editText').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).parent;
-            editWindow.querySelector('.editText').min = 0;
-            editWindow.querySelector('.editText').title = "Parent item ID";
-            editWindow.querySelector('.updateBtn').setAttribute("data-prop", "parent");
-            break;
         case "Remove":
-            editWindow.querySelector('.editText').style.display = "none";
+            editWindow.querySelector('.editableItems').style.display = "none";
             var span = document.createElement("span");
             span.setAttribute("class", "infoMsg");
-            span.textContent = "Are you sure want to delete item `" + getValue(treeJson, e.parentElement.getAttribute("data-id")).title + "` with id " + e.parentElement.getAttribute("data-id") + "?";
+            span.innerHTML = "Are you sure want to delete item `" + getValue(treeJson, e.parentElement.getAttribute("data-id")).title + "` with id " + e.parentElement.getAttribute("data-id") + "?<br/>This action will also remove related child elements!";
             editWindow.querySelector('.modalBody').prepend(span);
             editWindow.querySelector('.updateBtn').setAttribute("data-prop", "remove");
             break;
+        case "Edit":
+            editWindow.querySelector('.editTitle').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).title;
+            editWindow.querySelector('.editDescription').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).description;
+            //editWindow.querySelector('.editParent').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).parent;
+            editWindow.querySelector('.editableItems').style.display = "block";
+            editWindow.querySelector('.updateBtn').setAttribute("data-prop", "update");
+            //console.log(ids);
+            for (var i = 0; i < ids.length; i++) {
+                var option = document.createElement("option");
+                option.value = ids[i].id;
+                var indent = "";
+                if(ids[i].id<100){
+                    indent = "    ";
+                }
+                if(ids[i].id<10){
+                    indent = "      ";
+                }
+                option.text = "(id " + ids[i].id + ") " + indent + ids[i].name;
+                editWindow.querySelector('.editParent').appendChild(option);
+            }
+            editWindow.querySelector('.editParent').value = getValue(treeJson, e.parentElement.getAttribute("data-id")).parent;
+            break;
     }
 
+}
+
+function getAllId(arr, newArr, key) {
+  arr.forEach(function(item) {
+    for (let keys in item) {
+      if (keys === key) {
+        newArr.push({"id":item[key], "name":item['title']})
+      } else if (Array.isArray(item[keys])) {
+        getAllId(item[keys], newArr, key)
+      }
+    }
+
+  })
 }
 
 function closeModal() {
@@ -116,7 +148,7 @@ async function authRequestFunc(event) {
     event.preventDefault();
     var params = new URLSearchParams([...new FormData(event.target).entries()]);
     //console.log(form.elements['login'].value+":"+form.elements['pass'].value);
-    await fetch('auth.php', {
+    await fetch('functions/auth.php', {
             method: "POST",
             body: params
         })
@@ -136,14 +168,12 @@ async function editRequestFunc(event) {
     event.preventDefault();
 
     switch (event.target.querySelector('.updateBtn').getAttribute("data-prop")) {
-        case "title":
-            await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="' + event.target.querySelector('.updateBtn').getAttribute("data-prop") + '"]'));
-            break;
-        case "description":
-            await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="' + event.target.querySelector('.updateBtn').getAttribute("data-prop") + '"]'));
-            break;
-        case "parent":
-            await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="' + event.target.querySelector('.updateBtn').getAttribute("data-prop") + '"]'));
+        case "update":
+            await UpdateRequest(event.target.getAttribute("data-id"), "update", event.target.querySelector('.updateBtn').getAttribute("data-prop"), {
+                "title": editForm.querySelector(".editTitle").value,
+                "description": editForm.querySelector(".editDescription").value,
+                "parent": editForm.querySelector(".editParent").value
+            });
             break;
         case "remove":
             await UpdateRequest(event.target.getAttribute("data-id"), "remove", event.target.querySelector('.updateBtn').getAttribute("data-prop"), editWindow.querySelector('.modalBody input[name="' + event.target.querySelector('.updateBtn').getAttribute("data-prop") + '"]'));
@@ -173,7 +203,11 @@ function UpdateRequest(id, task, property, val) {
                 id: id,
                 task: task,
                 property: property,
-                value: val.value
+                value: {
+                    "title": val.title,
+                    "description": val.description,
+                    "parent": val.parent
+                }
             };
             break;
         case "remove":
@@ -201,7 +235,7 @@ function UpdateRequest(id, task, property, val) {
         body: JSON.stringify(params)
     };
 
-    fetch('updateTree.php', options)
+    fetch('functions/updateTree.php', options)
         .then(response => response.json())
         .then(response => {
             if (response.status == "success") {
@@ -224,7 +258,7 @@ document.onkeydown = function(evt) {
 };
 
 async function fetchData() {
-    await fetch('getTree.php?fetch=all&nested=true')
+    await fetch('functions/getTree.php?fetch=all&nested=true')
         .then((res) => res.json())
         .then((data) => {
             treeJson = data
@@ -245,6 +279,7 @@ async function fetchData() {
                 });
             }
         })
+        getAllId(treeJson, ids, 'id');
 }
 
 function expandFunction(event) {
