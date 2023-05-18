@@ -1,5 +1,5 @@
 # Trees Viewer/Editor
-## Test Task for internet-clients.com
+## Test Task
 
 > [Live on my website](https://test.fhnb.ru/Trees/)
 
